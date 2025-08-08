@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { readPalm } from "@/ai/flows/read-palm-flow";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Camera, Sparkles, Hand, AlertTriangle, Loader2 } from "lucide-react";
+import { Camera, Sparkles, Hand, AlertTriangle, Loader2, KeyRound } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +13,8 @@ type Horoscope = {
   title: string;
   prediction: string;
 };
+
+const apiKeyMissing = !process.env.NEXT_PUBLIC_GEMINI_API_KEY_CHECK;
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +48,9 @@ export default function Home() {
       }
     };
 
-    getCameraPermission();
+    if (!apiKeyMissing) {
+      getCameraPermission();
+    }
     
     return () => {
         if (videoRef.current && videoRef.current.srcObject) {
@@ -90,6 +94,22 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+
+  if (apiKeyMissing) {
+    return (
+       <div className="flex flex-col min-h-screen bg-gradient-to-br from-background to-slate-900 text-foreground font-body">
+         <main className="flex-1 flex items-center justify-center p-4 md:p-6">
+            <Alert variant="destructive" className="max-w-md">
+                <KeyRound />
+                <AlertTitle>API Key Missing</AlertTitle>
+                <AlertDescription>
+                   The <code className="font-mono bg-destructive-foreground/20 px-1 py-0.5 rounded">GEMINI_API_KEY</code> is missing. Please add it to the <code className="font-mono bg-destructive-foreground/20 px-1 py-0.5 rounded">.env</code> file to continue.
+                </AlertDescription>
+            </Alert>
+         </main>
+       </div>
+    )
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-background to-slate-900 text-foreground font-body">
