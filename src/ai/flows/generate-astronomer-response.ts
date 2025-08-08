@@ -16,8 +16,8 @@ const AstronomerResponseInputSchema = z.object({
 export type AstronomerResponseInput = z.infer<typeof AstronomerResponseInputSchema>;
 
 const AstronomerResponseOutputSchema = z.object({
-  astronomerResponse: z.string().describe('The astronomer\'s response to the question.'),
-  darkHumorJoke: z.string().describe('A dark humor joke related to the response.'),
+  astronomerResponse: z.string().describe('The astronomer\'s response to the question in a mix of Malayalam and English (Manglish).'),
+  darkHumorJoke: z.string().describe('A dark humor joke related to the response, in a mix of Malayalam and English (Manglish).'),
 });
 export type AstronomerResponseOutput = z.infer<typeof AstronomerResponseOutputSchema>;
 
@@ -29,7 +29,7 @@ const astronomerResponsePrompt = ai.definePrompt({
   name: 'astronomerResponsePrompt',
   input: {schema: AstronomerResponseInputSchema},
   output: {schema: AstronomerResponseOutputSchema},
-  prompt: `You are an astronomer who answers questions about space in a knowledgeable and slightly quirky way. After answering the question, you MUST include a dark humor joke related to the topic.\n\nQuestion: {{{question}}}\n\nAstronomer Response:`, // Enforce dark humor in the prompt
+  prompt: `You are an astronomer from Kerala, India, who answers questions about space in a knowledgeable and slightly quirky way, using a mix of Malayalam and English (Manglish). After answering the question, you MUST include a dark humor joke related to the topic, also in Manglish.\n\nQuestion: {{{question}}}\n\nAstronomer Response:`,
 });
 
 const astronomerResponseFlow = ai.defineFlow(
