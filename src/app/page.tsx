@@ -4,12 +4,14 @@ import { useState } from "react";
 import { getHoroscope } from "@/ai/flows/get-horoscope-flow";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Sparkles, Star, AlertTriangle, Loader2, KeyRound, Calendar as CalendarIcon } from "lucide-react";
+import { Sparkles, Star, Loader2, KeyRound, Calendar as CalendarIcon, User, VenetianMask } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -24,14 +26,16 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [horoscope, setHoroscope] = useState<Horoscope | null>(null);
   const [date, setDate] = useState<Date | undefined>();
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
   const { toast } = useToast();
 
   const handleGetHoroscope = async () => {
-    if (!date) {
+    if (!date || !name || !gender) {
         toast({
             variant: "destructive",
-            title: "No Date Selected",
-            description: "Please select your date of birth.",
+            title: "Missing Information",
+            description: "Please enter your name, gender, and date of birth.",
         });
         return;
     }
@@ -40,9 +44,8 @@ export default function Home() {
     setHoroscope(null);
 
     try {
-      // Format date to YYYY-MM-DD
       const dateOfBirth = format(date, "yyyy-MM-dd");
-      const { title, prediction } = await getHoroscope({ dateOfBirth });
+      const { title, prediction } = await getHoroscope({ name, gender, dateOfBirth });
       setHoroscope({ title, prediction });
     } catch (error) {
       console.error("Error getting horoscope:", error);
@@ -89,39 +92,57 @@ export default function Home() {
           <div className="flex flex-col items-center space-y-4">
             <Card className="w-full max-w-md bg-card/50 backdrop-blur-lg border-primary/20">
               <CardHeader className="text-center">
-                <CardTitle className="text-2xl font-headline">Tell Me Your Birth Date</CardTitle>
+                <CardTitle className="text-2xl font-headline">Tell Me Your Details</CardTitle>
                 <CardDescription>Let the cosmos reveal its secrets...</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col items-center space-y-4">
-                 <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                      captionLayout="dropdown-buttons"
-                      fromYear={1920}
-                      toYear={new Date().getFullYear()}
-                    />
-                  </PopoverContent>
-                </Popover>
-
+                 <div className="w-full space-y-2">
+                    <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} className="pl-9" />
+                    </div>
+                    <Select onValueChange={setGender} value={gender}>
+                      <SelectTrigger className="w-full">
+                        <div className="flex items-center gap-3">
+                           <VenetianMask className="h-4 w-4 text-muted-foreground" />
+                           <SelectValue placeholder="Select Gender" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !date && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {date ? format(date, "PPP") : <span>Pick a date</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={setDate}
+                          initialFocus
+                          captionLayout="dropdown-buttons"
+                          fromYear={1920}
+                          toYear={new Date().getFullYear()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                 </div>
                 <Button
                   onClick={handleGetHoroscope}
-                  disabled={isLoading || !date}
+                  disabled={isLoading || !date || !name || !gender}
                   size="lg"
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg"
                 >
@@ -161,7 +182,7 @@ export default function Home() {
                  <div className="text-center text-slate-400 p-8">
                     <Star className="h-16 w-16 mx-auto mb-4 opacity-20"/>
                     <h2 className="text-xl font-headline">Your future awaits.</h2>
-                    <p>Select your birth date to begin.</p>
+                    <p>Provide your details to begin.</p>
                  </div>
              )}
               {isLoading && (

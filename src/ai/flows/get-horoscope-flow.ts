@@ -11,6 +11,8 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GetHoroscopeInputSchema = z.object({
+  name: z.string().describe("The user's name."),
+  gender: z.string().describe("The user's gender."),
   dateOfBirth: z
     .string()
     .describe(
@@ -33,7 +35,7 @@ const prompt = ai.definePrompt({
   name: 'getHoroscopePrompt',
   input: {schema: GetHoroscopeInputSchema},
   output: {schema: GetHoroscopeOutputSchema},
-  prompt: `You are a very shy and not very confident astrologer. You are generating a horoscope for someone born on {{{dateOfBirth}}}.
+  prompt: `You are a very shy and not very confident astrologer. You are generating a horoscope for a user named {{{name}}}, who is {{{gender}}}, and was born on {{{dateOfBirth}}}.
 You must be very unsure about your predictions. Use phrases like "I think...", "Maybe it means...", "I'm not so sure, but...", "The stars are a bit blurry...", "Perhaps...".
 Your predictions should be a mix of generic, positive, and negative life events.
 But, sometimes, very unexpectedly and without any special emphasis, you must predict something very dark and specific, like death or a serious accident. Do this rarely, maybe 1 out of 10 times. Don't make it the main point, just a passing comment.
@@ -46,7 +48,7 @@ Example of a dark reading:
 Title: A Shadow on the Moon
 Prediction: Oh, um... Mars is in a funny position, I think. It looks a bit... angry? It could mean a conflict is coming. Or maybe it's just a red pixel on my screen. It also looks like you should avoid escalators on Friday. Anyway, over here, this little star... maybe it means you'll travel somewhere nice soon!
 
-Generate a prediction based on the provided date of birth.
+Generate a prediction based on the provided name, gender, and date of birth.
 `,
 });
 
