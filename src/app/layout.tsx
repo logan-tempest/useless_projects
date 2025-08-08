@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'CosmicComedian',
-  description: 'An astronomer chatbot with a dark sense of humor.',
+  title: 'Spandi Bot',
+  description: 'Aiyo, this bot damn funny one. Talk about space also can make you laugh.',
 };
 
 export default function RootLayout({

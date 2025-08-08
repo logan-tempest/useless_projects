@@ -22,8 +22,8 @@ export default function Home() {
       id: 1,
       role: "assistant",
       content:
-        "Greetings, star-gazer! I am the CosmicComedian. Ask me anything about the universe, from the tiniest quarks to the grandest superclusters.",
-      joke: "What's an astronaut's favorite part of a computer? The space bar.",
+        "Woi, star-gazer! I'm Spandi Bot. Ask me anything about space la, from the small small atoms until the big superclusters.",
+      joke: "Why the astronaut break up with the moon? Because it was just a phase.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -68,8 +68,8 @@ export default function Home() {
       console.error("Error generating response:", error);
       toast({
         variant: "destructive",
-        title: "Oh, a black hole!",
-        description: "My signal was lost in the cosmos. Please try again.",
+        title: "Alamak, black hole!",
+        description: "My signal lost in space la. Try again, can?",
       });
     } finally {
       setIsLoading(false);
@@ -82,7 +82,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto flex items-center justify-center gap-2">
             <Star className="text-accent" />
             <h1 className="text-2xl font-bold font-headline text-center text-primary-foreground">
-                CosmicComedian
+                Spandi Bot
             </h1>
             <Star className="text-accent" />
         </div>
@@ -156,7 +156,7 @@ export default function Home() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about the cosmos..."
+              placeholder="Ask about the cosmos la..."
               className="flex-1 bg-input/80 focus-visible:ring-accent"
               disabled={isLoading}
               autoComplete="off"
