@@ -88,7 +88,7 @@ export default function Home() {
       toast({
         variant: "destructive",
         title: "Aiyo, Oru prashnam!",
-        description: "Enikku onnum kaanan pattunilla. Please try again.",
+        description: "Something went wrong while reading your palm. Please try again.",
       });
     } finally {
       setIsLoading(false);
