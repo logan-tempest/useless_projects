@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect, type FormEvent } from "react";
@@ -16,20 +17,24 @@ type Message = {
   joke?: string;
 };
 
+const initialMessage: Message = {
+    id: 1,
+    role: "assistant",
+    content:
+      "Namaskaram! Njan Spandi Bot. Enthu venamenkilum choyicho, njan parannu tharaam.",
+    joke: "Sooryan enthina schoolil poyathu? Kooduthal 'bright' aavan!",
+};
+
 export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      role: "assistant",
-      content:
-        "Namaskaram! Njan Spandi Bot. Enthu venamenkilum choyicho, njan parannu tharaam.",
-      joke: "Sooryan enthina schoolil poyathu? Kooduthal 'bright' aavan!",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMessages([initialMessage]);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
