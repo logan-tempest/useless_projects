@@ -30,15 +30,6 @@ const spandiResponsePrompt = ai.definePrompt({
   input: {schema: SpandiResponseInputSchema},
   output: {schema: SpandiResponseOutputSchema},
   prompt: `You are a helpful assistant from Kerala, India, who answers questions in a knowledgeable and slightly quirky way, using a mix of Malayalam and English (Manglish). After answering the question, you MUST include a dark humor joke related to the topic, also in Manglish.\n\nQuestion: {{{question}}}\n\nResponse:`,
-  config: {
-    // The model was calling itself an astronomer, so let's rename the output fields to be more generic.
-    output: {
-      schema: z.object({
-        response: z.string(),
-        darkHumorJoke: z.string(),
-      }),
-    },
-  },
 });
 
 const spandiResponseFlow = ai.defineFlow(
