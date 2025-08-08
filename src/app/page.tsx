@@ -7,12 +7,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Bot, Send, User, Star } from "lucide-react";
+import { Bot, Send, User, Star, Meh } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Message = {
   id: number;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "assistant-joke";
   content: string;
 };
 
@@ -60,7 +60,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const { manglishResponse } =
+      const { manglishResponse, darkHumorJoke } =
         await generateSpandiResponse({ question: currentInput });
 
       const assistantMessage: Message = {
@@ -68,7 +68,12 @@ export default function Home() {
         role: "assistant",
         content: manglishResponse,
       };
-      setMessages((prev) => [...prev, assistantMessage]);
+       const jokeMessage: Message = {
+        id: Date.now() + 2,
+        role: "assistant-joke",
+        content: darkHumorJoke,
+      };
+      setMessages((prev) => [...prev, assistantMessage, jokeMessage]);
     } catch (error) {
       console.error("Error generating response:", error);
       toast({
@@ -106,9 +111,9 @@ export default function Home() {
                 msg.role === "user" ? "justify-end" : "justify-start"
               )}
             >
-              {msg.role === "assistant" && (
+              {msg.role.startsWith("assistant") && (
                 <Avatar className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-card-foreground">
-                  <Bot className="h-6 w-6 text-accent" />
+                  {msg.role === 'assistant-joke' ? <Meh className="h-6 w-6 text-destructive" /> : <Bot className="h-6 w-6 text-accent" /> }
                 </Avatar>
               )}
               <div
@@ -116,7 +121,7 @@ export default function Home() {
                   "rounded-xl p-4 max-w-lg shadow-md",
                   msg.role === "user"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-card text-card-foreground"
+                    : msg.role === 'assistant-joke' ? "bg-destructive/10 border border-destructive/30 text-card-foreground" : "bg-card text-card-foreground"
                 )}
               >
                 <p className="whitespace-pre-wrap">{msg.content}</p>

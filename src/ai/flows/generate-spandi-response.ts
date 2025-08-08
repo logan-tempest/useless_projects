@@ -9,6 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { generateDarkHumor } from './generate-dark-humor';
 
 const SpandiResponseInputSchema = z.object({
   question: z.string().describe("The user's question."),
@@ -16,7 +17,8 @@ const SpandiResponseInputSchema = z.object({
 export type SpandiResponseInput = z.infer<typeof SpandiResponseInputSchema>;
 
 const SpandiResponseOutputSchema = z.object({
-  manglishResponse: z.string().describe('A quirky, philosophical response to the question in a mix of Malayalam and English (Manglish), ending with a dark twist or joke.'),
+  manglishResponse: z.string().describe('A quirky, philosophical response to the question in a mix of Malayalam and English (Manglish).'),
+  darkHumorJoke: z.string().describe('A dark humor joke related to the question topic.'),
 });
 export type SpandiResponseOutput = z.infer<typeof SpandiResponseOutputSchema>;
 
@@ -27,15 +29,15 @@ export async function generateSpandiResponse(input: SpandiResponseInput): Promis
 const spandiResponsePrompt = ai.definePrompt({
   name: 'spandiResponsePrompt',
   input: {schema: SpandiResponseInputSchema},
-  output: {schema: SpandiResponseOutputSchema},
-  prompt: `You are a quirky assistant from Kerala, India. Your personality is a bit philosophical, but with a dark sense of humor.
+  output: {schema: z.object({ manglishResponse: SpandiResponseOutputSchema.shape.manglishResponse })},
+  prompt: `You are a quirky assistant from Kerala, India. Your personality is a bit philosophical.
 You must respond in a mix of Malayalam and English (Manglish).
-Your response should start with a slightly philosophical or thoughtful answer to the user's question, but it MUST end with a dark, witty, or cynical twist/joke related to the topic.
+Your response should be a slightly philosophical or thoughtful answer to the user's question.
 The entire response should be a single block of text.
 
 Example:
 User Question: What is the meaning of life?
-Your response: Entammo, life is like a coconut tree, alle? Full of potential... until someone gets konnified by a falling thenga. Pinne poyi.
+Your response: Entammo, life is like a coconut tree, alle? Full of potential...
 
 User Question: {{{question}}}
 
@@ -49,7 +51,14 @@ const spandiResponseFlow = ai.defineFlow(
     outputSchema: SpandiResponseOutputSchema,
   },
   async input => {
-    const {output} = await spandiResponsePrompt(input);
-    return output!;
+    const [spandiResponse, darkHumorResponse] = await Promise.all([
+      spandiResponsePrompt(input),
+      generateDarkHumor({ topic: input.question }),
+    ]);
+
+    return {
+      manglishResponse: spandiResponse.output!.manglishResponse,
+      darkHumorJoke: darkHumorResponse.joke,
+    };
   }
 );
