@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, type FormEvent } from "react";
-import { generateAstronomerResponse } from "@/ai/flows/generate-astronomer-response";
+import { generateSpandiResponse } from "@/ai/flows/generate-spandi-response";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ export default function Home() {
       id: 1,
       role: "assistant",
       content:
-        "Namaskaram, space enthusiast! Njan Spandi Bot. Aakashathe patti enthu venamenkilum choyicho, from the cheruth atoms to the valiya superclusters.",
+        "Namaskaram! Njan Spandi Bot. Enthu venamenkilum choyicho, njan parannu tharaam.",
       joke: "Sooryan enthina schoolil poyathu? Kooduthal 'bright' aavan!",
     },
   ]);
@@ -54,13 +54,13 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const { astronomerResponse, darkHumorJoke } =
-        await generateAstronomerResponse({ question: currentInput });
+      const { response, darkHumorJoke } =
+        await generateSpandiResponse({ question: currentInput });
 
       const assistantMessage: Message = {
         id: Date.now() + 1,
         role: "assistant",
-        content: astronomerResponse,
+        content: response,
         joke: darkHumorJoke,
       };
       setMessages((prev) => [...prev, assistantMessage]);
@@ -69,7 +69,7 @@ export default function Home() {
       toast({
         variant: "destructive",
         title: "Ayyoo, daivame!",
-        description: "Ente signal space-il poyi. Onnu koode try cheyyamo?",
+        description: "Ente signal poyi. Onnu koode try cheyyamo?",
       });
     } finally {
       setIsLoading(false);
@@ -156,7 +156,7 @@ export default function Home() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Aakashathe patti choyicho..."
+              placeholder="Enthenkilum choyicho..."
               className="flex-1 bg-input/80 focus-visible:ring-accent"
               disabled={isLoading}
               autoComplete="off"

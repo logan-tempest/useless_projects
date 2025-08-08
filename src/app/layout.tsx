@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: 'Spandi Bot',
-  description: 'Aiyo, this bot damn funny one. Talk about space also can make you laugh.',
+  description: 'Aiyo, this bot is a general knowledge bot that can make you laugh.',
 };
 
 export default function RootLayout({
