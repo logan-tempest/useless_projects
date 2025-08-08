@@ -1,4 +1,4 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/read-palm-flow.ts';
+import '@/ai/flows/get-horoscope-flow.ts';

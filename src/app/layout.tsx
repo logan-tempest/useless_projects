@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Palm Reader',
-  description: 'A mystical palm reader that tells your future.',
+  title: 'Horoscope',
+  description: 'A mystical astrologer that tells your future.',
 };
 
 export default function RootLayout({
