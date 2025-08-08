@@ -14,15 +14,13 @@ type Message = {
   id: number;
   role: "user" | "assistant";
   content: string;
-  joke?: string;
 };
 
 const initialMessage: Message = {
     id: 1,
     role: "assistant",
     content:
-      "Namaskaram! Njan Spandi Bot. Enthu venamenkilum choyicho, njan parannu tharaam.",
-    joke: "Sooryan enthina schoolil poyathu? Kooduthal 'bright' aavan!",
+      "Namaskaram! Njan Spandi Bot. Enthu venamenkilum choyicho... But be careful what you wish for, because life is like a Kerala road, full of surprises and potholes.",
 };
 
 export default function Home() {
@@ -62,14 +60,13 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const { response, darkHumorJoke } =
+      const { manglishResponse } =
         await generateSpandiResponse({ question: currentInput });
 
       const assistantMessage: Message = {
         id: Date.now() + 1,
         role: "assistant",
-        content: response,
-        joke: darkHumorJoke,
+        content: manglishResponse,
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
@@ -99,8 +96,8 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col">
-        <div className="max-w-4xl w-full mx-auto space-y-6 mt-auto">
+      <main className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col justify-end">
+        <div className="max-w-4xl w-full mx-auto space-y-6">
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -123,13 +120,6 @@ export default function Home() {
                 )}
               >
                 <p className="whitespace-pre-wrap">{msg.content}</p>
-                {msg.joke && (
-                  <div className="mt-3 pt-3 border-t border-border/50">
-                    <p className="text-sm italic opacity-80 whitespace-pre-wrap">
-                      {msg.joke}
-                    </p>
-                  </div>
-                )}
               </div>
 
               {msg.role === "user" && (

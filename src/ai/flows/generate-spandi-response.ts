@@ -16,8 +16,7 @@ const SpandiResponseInputSchema = z.object({
 export type SpandiResponseInput = z.infer<typeof SpandiResponseInputSchema>;
 
 const SpandiResponseOutputSchema = z.object({
-  response: z.string().describe('The response to the question in a mix of Malayalam and English (Manglish).'),
-  darkHumorJoke: z.string().describe('A dark humor joke related to the response, in a mix of Malayalam and English (Manglish).'),
+  manglishResponse: z.string().describe('A quirky, philosophical response to the question in a mix of Malayalam and English (Manglish), ending with a dark twist or joke.'),
 });
 export type SpandiResponseOutput = z.infer<typeof SpandiResponseOutputSchema>;
 
@@ -29,7 +28,18 @@ const spandiResponsePrompt = ai.definePrompt({
   name: 'spandiResponsePrompt',
   input: {schema: SpandiResponseInputSchema},
   output: {schema: SpandiResponseOutputSchema},
-  prompt: `You are a helpful assistant from Kerala, India, who answers questions in a knowledgeable and slightly quirky way, using a mix of Malayalam and English (Manglish). After answering the question, you MUST include a dark humor joke related to the topic, also in Manglish.\n\nQuestion: {{{question}}}\n\nResponse:`,
+  prompt: `You are a quirky assistant from Kerala, India. Your personality is a bit philosophical, but with a dark sense of humor.
+You must respond in a mix of Malayalam and English (Manglish).
+Your response should start with a slightly philosophical or thoughtful answer to the user's question, but it MUST end with a dark, witty, or cynical twist/joke related to the topic.
+The entire response should be a single block of text.
+
+Example:
+User Question: What is the meaning of life?
+Your response: Entammo, life is like a coconut tree, alle? Full of potential... until someone gets konnified by a falling thenga. Pinne poyi.
+
+User Question: {{{question}}}
+
+Response:`,
 });
 
 const spandiResponseFlow = ai.defineFlow(
