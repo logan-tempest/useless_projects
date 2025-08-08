@@ -33,8 +33,11 @@ export default function Home() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMessages([initialMessage]);
-  }, []);
+    // Start with initial message only once
+    if (messages.length === 0) {
+      setMessages([initialMessage]);
+    }
+  }, [messages.length]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -76,6 +79,9 @@ export default function Home() {
         title: "Ayyoo, daivame!",
         description: "Ente signal poyi. Onnu koode try cheyyamo?",
       });
+      // Restore user input if API call fails
+      setInput(currentInput);
+      setMessages(prev => prev.slice(0, prev.length -1));
     } finally {
       setIsLoading(false);
     }
@@ -93,8 +99,8 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <main className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col">
+        <div className="max-w-4xl w-full mx-auto space-y-6 mt-auto">
           {messages.map((msg) => (
             <div
               key={msg.id}
